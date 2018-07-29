@@ -1,0 +1,103 @@
+<!------------------------------------------------------------------------------------Modal for adding item--->
+<ng-template #addItemTemplate class="modal">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Add Item</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+     <!-- //this x is to close the modal-->
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!--//On form submission, the item is added to the database through the service-->
+    <form class="needs-validation" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-row">
+        <label>Branch</label>
+       <select class="form-control" [(ngModel)]="item.branchID" name="branch">
+          <option *ngFor="let branch of branches" [value]="branch.id" [selected]="item.branchID == branch.id">{{branch.name}}</option>
+        </select>
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+      </div>
+      <br>
+      <div class="form-row">
+        <label >Item Type</label>
+        <select class="form-control" [(ngModel)]="item.itemType" name="itemType" >
+          <option *ngFor="let itemType of itemTypes" [value]="itemType.id" >{{itemType.name}}</option>
+        </select>
+      </div>
+      <br>
+      <div class="form-row">
+        <button style="float: right;" type="reset" value="Reset" class="btn btn-outline-danger"
+                (click)="closeModal()">Cancel</button>
+        <button style="float: right;" type="submit" value="Submit" class="btn btn-outline-primary"
+                >Add Item</button>
+      </div>
+    </form>
+  </div>
+ <!-- Alerts if the add item form is missing something-->
+  <div *ngIf = "alertSuccess===true" class="alert alert-success">
+    <strong>Item added successfully.</strong>
+  </div>
+  <div *ngIf = "alertFailure===true" class="alert alert-danger">
+    <strong>Item not added. </strong>Please fill all required fields
+  </div>
+</ng-template>
+<!---------------------------------------------------------------------------buttons at the top of the page--->
+<div class="container">
+  <div class="row">
+    <button type="button" style="margin:1%" class="btn btn-outline-info btn-lg"
+            (click)="openModal(addItemTemplate)">Add Item</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-dark btn-lg"
+            (click)="selectAllItems($event)" >Select All</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-dark btn-lg"
+            (click)="deselectAllItems($event)" >Deselect All</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-primary btn-lg"
+            (click)="updateSelectedItems($event)">Save Selected</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-danger btn-lg"
+            (click)="deleteSelectedItems($event)">Delete Selected</button>
+  </div>
+</div>
+<!---------------------------------------------------------------------------List of items--->
+<div class = "container" *ngIf = "items?.length > 0;else noItems">
+  <ul class="list-group">
+    <li class="list-group-item">
+      <label class="container">
+      </label>
+      <div class="input-group">
+        <label  class="form-control" >ID</label>
+        <label  class="form-control" >Item Type</label>
+        <label  class="form-control" >Branch</label>
+        <label  style="width:170px" ></label>
+      </div>
+    </li>
+  </ul>
+  <ul *ngFor="let item of items" class="list-group">
+    <li class="list-group-item">
+      <label class="container">
+        <input class="form-control" type="checkbox" [checked]=item.selected (change)="selectItem($event, item)" value={{item.id}}>
+        <span class="checkmark"></span>
+      </label>
+      <div class="input-group">
+          <label  class="form-control" >{{item.id}}</label>
+          <select class="form-control" [(ngModel)]="item.itemType">
+            <option *ngFor="let itemType of itemTypes" [value]="itemType.id" [selected]="item.itemType == itemType.id">{{itemType.name}}</option>
+          </select>
+          <select class="form-control" [(ngModel)]="item.branchID">
+            <option *ngFor="let branch of branches" [value]="branch.id" [selected]="item.branchID == branch.id">{{branch.name}}: {{branch.location}}</option>
+          </select>
+          <button  type="button"class="btn btn-outline-danger"
+                 (click)="deleteItem($event, item)">delete</button>
+          <button  type="button"class="btn btn-outline-primary"
+                (click)="updateItem($event, item)" >confirm</button>
+      </div>
+    </li>
+  </ul>
+</div>
+
+  <ng-template #noItems>
+    <div class = "container">
+      <hr>
+    <h5>There are no items to list</h5>
+    </div>
+  </ng-template>

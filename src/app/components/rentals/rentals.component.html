@@ -1,0 +1,50 @@
+<!---------------------------------------------------------------------------buttons at the top of the page--->
+<div class="container">
+  <div class="row">
+    <button type="button" style="margin:1%" class="btn btn-outline-dark btn-lg"
+            (click)="selectAllRentals($event)" >Select All</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-dark btn-lg"
+            (click)="deselectAllRentals($event)" >Deselect All</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-primary btn-lg"
+            (click)="updateSelectedRentals($event)">Save Selected</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-danger btn-lg"
+            (click)="deleteSelectedRentals($event)">Delete Selected</button>
+  </div>
+</div>
+<!---------------------------------------------------------------------------List of branches--->
+<div class = "container" *ngIf = "rentals?.length > 0;else noRentals">
+  <ul class="list-group">
+    <li class="list-group-item">
+      <label class="container">
+      </label>
+      <div class="input-group">
+        <label  class="form-control" >Item ID</label>
+        <label  class="form-control" >Item Type</label>
+        <label  class="form-control" >Operator</label>
+        <label  class="form-control" >Client ID</label>
+        <label  class="form-control" >Time</label>
+      </div>
+    </li>
+  </ul>
+  <ul *ngFor="let rental of rentals; let i = index " class="list-group">
+    <li class="list-group-item">
+      <div class="input-group">
+        <label  class="form-control" >{{rental.itemID}}</label>
+        <label  class="form-control" >{{rental.itemType}}</label>
+        <label  class="form-control" >TO BE IMPLEMENTED</label>
+        <label  class="form-control" >{{rental.clientID}}</label>
+        <label  class="form-control" >{{rental.start}}</label>
+        <!--<label  class="form-control" >{{rental.id}}</label>
+        <label  class="form-control" >{{item.id}}</label>-->
+
+      </div>
+    </li>
+  </ul>
+</div>
+
+<ng-template #noBraches>
+  <div class = "container">
+    <hr>
+    <h5>There are no rentals going at this moment</h5>
+  </div>
+</ng-template>

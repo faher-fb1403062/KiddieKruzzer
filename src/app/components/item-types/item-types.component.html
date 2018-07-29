@@ -1,0 +1,102 @@
+<!------------------------------------------------------------------------------------Modal for adding branch--->
+<ng-template #addItemTypeTemplate class="modal">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Add Item Type</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+      <!-- //this x is to close the modal-->
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!--//On form submission, the Branch is added to the database through the service-->
+    <form class="needs-validation" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-row">
+        <label>Item Type</label>
+        <input class="form-control" [(ngModel)]="itemType.name" name="name">
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+      </div>
+      <br>
+      <div class="form-row">
+        <label >Interval (minutes)</label>
+        <input class="form-control" type=number [(ngModel)]="itemType.interval" name="interval">
+      </div>
+      <br>
+      <div class="form-row">
+        <label >Price Per Interval (QR)</label>
+        <input class="form-control" type=number [(ngModel)]="itemType.ppi" name="ppi">
+      </div>
+      <br>
+      <div class="form-row">
+        <button style="float: right;" type="reset" value="Reset" class="btn btn-outline-danger"
+                (click)="closeModal()">Cancel</button>
+        <button style="float: right;" type="submit" value="Submit" class="btn btn-outline-primary"
+        >Add Item Type</button>
+      </div>
+    </form>
+  </div>
+  <!-- Alerts if the add item form is missing something-->
+  <div *ngIf = "alertSuccess===true" class="alert alert-success">
+    <strong>Item Type added successfully.</strong>
+  </div>
+  <div *ngIf = "alertFailure===true" class="alert alert-danger">
+    <strong>Item Type not added. </strong>Please fill all required fields
+  </div>
+</ng-template>
+<!---------------------------------------------------------------------------buttons at the top of the page--->
+<div class="container">
+  <div class="row">
+    <button type="button" style="margin:1%" class="btn btn-outline-info btn-lg"
+            (click)="openModal(addItemTypeTemplate)">Add Item Type</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-dark btn-lg"
+            (click)="selectAllItemTypes($event)" >Select All</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-dark btn-lg"
+            (click)="deselectAllItemTypes($event)" >Deselect All</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-primary btn-lg"
+            (click)="updateSelectedItemTypes($event)">Save Selected</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-danger btn-lg"
+            (click)="deleteSelectedItemTypes($event)">Delete Selected</button>
+  </div>
+</div>
+<!---------------------------------------------------------------------------List of branches--->
+<div class = "container" *ngIf = "itemTypes?.length > 0;else noItemTypes">
+  <ul class="list-group">
+    <li class="list-group-item">
+      <label class="container">
+      </label>
+      <div class="input-group">
+        <label  class="form-control" >ID</label>
+        <label  class="form-control" >Item Type</label>
+        <label  class="form-control" >Intervsl</label>
+        <label  class="form-control" >Price per Interval</label>
+        <label  style="width:170px" ></label>
+      </div>
+    </li>
+  </ul>
+  <ul *ngFor="let itemType of itemTypes" class="list-group">
+    <li class="list-group-item">
+      <label class="container">
+        <input class="form-control checkbox-class" type="checkbox" [checked]=itemType.selected (change)="selectItemTypes($event, itemType)" value={{itemType.id}}>
+        <span class="checkmark"></span>
+      </label>
+      <div class="input-group">
+        <label  class="form-control" >{{itemType.id}}</label>
+        <input class="form-control list-element-input" [(ngModel)]="itemType.name">
+        <input class="form-control list-element-input" [(ngModel)]="itemType.interval">
+        <input class="form-control list-element-input" [(ngModel)]="itemType.ppi">
+        <button  type="button"class="btn btn-outline-danger"
+                 (click)="deleteItemType($event, itemType)">delete</button>
+        <button  type="button"class="btn btn-outline-primary"
+                 (click)="updateItemType($event, itemType)" >confirm</button>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<ng-template #noItemTypes>
+  <div class = "container">
+    <hr>
+    <h5>There are no item types to list</h5>
+  </div>
+</ng-template>

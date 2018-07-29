@@ -1,0 +1,93 @@
+<!------------------------------------------------------------------------------------Modal for adding branch--->
+<ng-template #addBranchTemplate class="modal">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Add Branch</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+      <!-- //this x is to close the modal-->
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!--//On form submission, the Branch is added to the database through the service-->
+    <form class="needs-validation" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-row">
+        <label>Branch Name</label>
+        <input class="form-control" [(ngModel)]="branch.name" name="name">
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+      </div>
+      <br>
+      <div class="form-row">
+        <label >Branch Location</label>
+        <input class="form-control" [(ngModel)]="branch.location" name="location">
+      </div>
+      <br>
+      <div class="form-row">
+        <button style="float: right;" type="reset" value="Reset" class="btn btn-outline-danger"
+                (click)="closeModal()">Cancel</button>
+        <button style="float: right;" type="submit" value="Submit" class="btn btn-outline-primary"
+        >Add Item</button>
+      </div>
+    </form>
+  </div>
+  <!-- Alerts if the add item form is missing something-->
+  <div *ngIf = "alertSuccess===true" class="alert alert-success">
+    <strong>Branch added successfully.</strong>
+  </div>
+  <div *ngIf = "alertFailure===true" class="alert alert-danger">
+    <strong>Branch not added. </strong>Please fill all required fields
+  </div>
+</ng-template>
+<!---------------------------------------------------------------------------buttons at the top of the page--->
+<div class="container">
+  <div class="row">
+    <button type="button" style="margin:1%" class="btn btn-outline-info btn-lg"
+            (click)="openModal(addBranchTemplate)">Add Branch</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-dark btn-lg"
+            (click)="selectAllBranches($event)" >Select All</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-dark btn-lg"
+            (click)="deselectAllBranches($event)" >Deselect All</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-primary btn-lg"
+            (click)="updateSelectedBranches($event)">Save Selected</button>
+    <button type="button" style="margin:1%" class="btn btn-outline-danger btn-lg"
+            (click)="deleteSelectedBranches($event)">Delete Selected</button>
+  </div>
+</div>
+<!---------------------------------------------------------------------------List of branches--->
+<div class = "container" *ngIf = "branches?.length > 0;else noBraches">
+  <ul class="list-group">
+    <li class="list-group-item">
+      <label class="container">
+      </label>
+      <div class="input-group">
+        <label  class="form-control" >Branch Name</label>
+        <label  class="form-control" >Branch Location</label>
+        <label  style="width:170px" ></label>
+      </div>
+    </li>
+  </ul>
+  <ul *ngFor="let branch of branches" class="list-group">
+    <li class="list-group-item">
+      <label class="container">
+        <input class="form-control checkbox-class" type="checkbox" [checked]=branch.selected (change)="selectBranch($event, branch)" value={{branch.id}}>
+        <span class="checkmark"></span>
+      </label>
+      <div class="input-group">
+        <input class="form-control list-element-input" [(ngModel)]="branch.name">
+        <input class="form-control list-element-input" [(ngModel)]="branch.location">
+        <button  type="button"class="btn btn-outline-danger"
+                 (click)="deleteBranch($event, branch)">delete</button>
+        <button  type="button"class="btn btn-outline-primary"
+                 (click)="updateBranch($event, branch)" >confirm</button>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<ng-template #noBraches>
+  <div class = "container">
+    <hr>
+    <h5>There are no branches to list</h5>
+  </div>
+</ng-template>
